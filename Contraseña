@@ -1,0 +1,66 @@
+import random
+import string
+
+
+def generar_contrasena(longitud, usar_mayusculas=True, usar_minusculas=True, usar_numeros=True, usar_simbolos=True):
+    caracteres = ""
+    if usar_mayusculas:
+        caracteres += string.ascii_uppercase
+    if usar_minusculas:
+        caracteres += string.ascii_lowercase
+    if usar_numeros:
+        caracteres += string.digits
+    if usar_simbolos:
+        caracteres += string.punctuation
+
+    if not caracteres:
+        raise ValueError("Debe seleccionar al menos un tipo de carácter.")
+
+    return "".join(random.choice(caracteres) for _ in range(longitud))
+
+
+def pedir_entero(mensaje, minimo, maximo):
+    while True:
+        try:
+            valor = int(input(mensaje))
+            if minimo <= valor <= maximo:
+                return valor
+            print(f"Ingresa un número entre {minimo} y {maximo}.")
+        except ValueError:
+            print("Entrada inválida. Ingresa un número entero.")
+
+
+def preguntar_si_no(mensaje):
+    while True:
+        respuesta = input(mensaje + " (s/n): ").strip().lower()
+        if respuesta in {"s", "si"}:
+            return True
+        if respuesta in {"n", "no"}:
+            return False
+        print("Responde con 's' o 'n'.")
+
+
+def main():
+    print("=== Generador de Contraseñas ===")
+
+    longitud = pedir_entero("¿Qué longitud quieres para la contraseña? ", 4, 64)
+    usar_mayusculas = preguntar_si_no("¿Incluir letras mayúsculas?")
+    usar_minusculas = preguntar_si_no("¿Incluir letras minúsculas?")
+    usar_numeros = preguntar_si_no("¿Incluir números?")
+    usar_simbolos = preguntar_si_no("¿Incluir símbolos especiales?")
+
+    try:
+        contrasena = generar_contrasena(
+            longitud,
+            usar_mayusculas=usar_mayusculas,
+            usar_minusculas=usar_minusculas,
+            usar_numeros=usar_numeros,
+            usar_simbolos=usar_simbolos,
+        )
+        print("\nContraseña generada:", contrasena)
+    except ValueError as error:
+        print(error)
+
+
+if __name__ == "__main__":
+    main()
